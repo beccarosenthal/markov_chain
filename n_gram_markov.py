@@ -51,15 +51,21 @@ def make_chains(text_string, n_gram_size):
     value = list_of_words[n_gram_size + 1]
     chains[key] = [value]
 
-
-    #using i and n_gram_size to incriment through list and get keys
+    #using i and n_gram_size to increment through list and get keys
     for i in range(1, len(list_of_words) - n_gram_size):
         key = []
         key = tuple(list_of_words[i:n_gram_size + i])
-  
+
         value = list_of_words[n_gram_size + i]
         chains.setdefault(key, [])  #if key exists, awesome; else, make [] value
         chains[key].append(value)
+
+    print chains.items()
+    ###key that will make poem stop moving
+    chains[("END", "END")] = [None]
+
+    # ##add ender key to dictionary
+     # chains[end_tuple] = [None]
 
     # print chains
     return chains
@@ -74,20 +80,16 @@ def make_text(chains, n_gram_size): #
     ###Choosing length of key
     words.extend(new_key)
 
-    # options_at_random_thing = chains[random_thing]
-    # random_word = choice(options_at_random_thing)
-    # words.append(random_word)
-
     while True:
-        if None in chains[new_key]:
-            words.append("\n")
-            break
-        else:
+
+        if None not in chains[new_key]:
+
             words.append(choice(chains[new_key]))
             new_key = []
             for i in range(-1 * n_gram_size):
                 new_key.append(words[i])
             new_key = tuple(new_key)
+
     #make line breaks at punctuation
     for i in range(len(words)):
         if words[i][-1] in string.punctuation:
